@@ -230,6 +230,12 @@ func (c *ingressController) handleSyncErr(obj interface{}, err error) {
 		ing, errLocal = c.ingressLister.ExtensionsV1beta1(namespace, name)
 	}
 
+	if c.isIngressEffective(ing) {
+		log.Errorw("skipping unknown ingress class",
+			zap.Any("ingress", ing),
+		)
+	}
+
 	if err == nil {
 		// add status
 		if ev.Type != types.EventDelete {
